@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mentor–Mentee Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#ffffff;--soft:#f3f7fc;--side:#e4effb;--card:#ffffff;--ink:#14233a;--mute:#5a6b82;--line:#d6e2f0;--ind:#2563a8;--indsoft:#dbe9f8;--mint:#2e7d4f;--mintsoft:#dcf1e3;--amb:#8a5d00;--ambsoft:#f0e3bf;--rose:#a8432c;--rosesoft:#f1d9d1;--onacc:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--side);color:var(--ink);font:400 16px/1.55 'Source Sans 3',system-ui,sans-serif;min-height:100vh}
+h1,h2,h3{font-family:'Source Serif 4',Georgia,serif;line-height:1.15;font-weight:700}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--ind);outline-offset:2px}
+.hide{display:none!important}
+/* login */
+#login{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+.brand{background:var(--side);color:var(--ink);padding:clamp(28px,6vw,72px);display:flex;flex-direction:column;justify-content:space-between;gap:40px}
+.brand h1{font-size:clamp(2rem,4.2vw,3.2rem);max-width:14ch}
+.brand p{max-width:40ch;color:var(--mute);margin-top:16px}
+.brand ul{list-style:none;padding:0;border-top:1px solid #b9cfe8}
+.brand li{padding:12px 0;border-bottom:1px solid #b9cfe8;display:flex;gap:14px}
+.brand li b{min-width:76px}
+.formside{background:#fff;display:grid;place-items:center;padding:28px}
+.lbox{width:100%;max-width:400px}
+.lbox h2{font-size:1.7rem;margin-bottom:6px}
+.lbox>p{color:var(--mute);margin-bottom:20px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);border:1.5px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:6px}
+.tab{background:none;border:0;padding:10px 4px;font-weight:600;color:var(--mute);transition:background .2s,color .2s}
+.tab+.tab{border-left:1.5px solid var(--line)}
+.tab.on{background:var(--ind);color:var(--onacc)}
+#err{color:var(--rose);font-weight:600;min-height:1.5em;margin-top:10px}
+.demo{margin-top:22px;border-top:1px solid var(--line);padding-top:16px;font-size:.92rem;color:var(--mute)}
+.demo button{display:flex;justify-content:space-between;width:100%;background:none;border:0;border-bottom:1px dashed var(--line);padding:8px 2px;text-align:left}
+.demo button:hover{color:var(--ink)}
+.demo code{font:500 .85rem ui-monospace,monospace}
+/* shell */
+#app{display:grid;grid-template-columns:230px 1fr;min-height:100vh;background:var(--side)}
+aside{background:var(--side);padding:24px 16px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh}
+.logo{font:700 1.2rem 'Source Serif 4',serif;margin:0 6px 22px;padding-bottom:16px;border-bottom:1.5px solid #b9cfe8}
+.nav{background:none;border:0;border-left:3px solid transparent;text-align:left;padding:10px 12px;border-radius:0 8px 8px 0;color:var(--mute);font-weight:500}
+.nav:hover{background:#d3e4f6;color:var(--ink)}
+.nav.on{border-left-color:var(--ind);background:#fff;color:var(--ink);font-weight:700}
+.me{margin-top:auto;display:flex;gap:10px;align-items:center;padding:12px 6px;border-top:1.5px solid #b9cfe8}
+.av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.85rem;background:var(--indsoft);color:var(--ink);border:1.5px solid var(--ind);flex:none}
+.me small{color:var(--mute);display:block;line-height:1.2}
+.out{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:9px;color:var(--mute);font-weight:500}
+.out:hover{color:var(--ink);border-color:var(--ink)}
+main{padding:34px clamp(18px,4vw,48px) 60px;max-width:1100px;width:100%;margin:0 auto;background:#fff;border-left:1.5px solid #c8dbf0;border-right:1.5px solid #c8dbf0}
+main>header{margin-bottom:24px}
+main h2{font-size:clamp(1.7rem,3.6vw,2.3rem)}
+main header p{color:var(--mute);margin-top:6px}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:24px}
+.card h3{font-size:1.15rem;margin-bottom:14px}
+label{display:block;font-weight:600;font-size:.9rem;margin:14px 0 6px}
+input[type=text],input[type=password],select,textarea{width:100%;background:var(--soft);color:#14233a;border:1.5px solid var(--line);border-radius:8px;padding:10px 12px}
+input:focus,select:focus,textarea:focus{border-color:var(--ind);outline:none}
+textarea{min-height:100px;resize:vertical}
+.btn{background:var(--ind);color:var(--onacc);border:0;border-radius:8px;padding:11px 22px;font-weight:700;width:auto;transition:transform .12s,filter .2s}
+.btn.full{width:100%;margin-top:18px}
+.btn:hover{filter:brightness(1.12)}.btn:active{transform:scale(.97)}
+.sub{display:grid;grid-template-columns:100px 1fr 38px;align-items:center;gap:12px;margin:10px 0}
+.sub b{text-align:right}
+input[type=range]{width:100%;accent-color:var(--ind)}
+.track{background:var(--line);border-radius:3px;height:8px;overflow:hidden}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:none;border-radius:6px;padding:6px 14px;font-size:.92rem;transition:.15s}
+.chip.on{background:var(--ind);border-color:var(--ind);color:var(--onacc)}
+.badge{display:inline-block;padding:4px 10px;border-radius:5px;font-size:.85rem;font-weight:700}
+.b-ok{background:var(--mintsoft);color:var(--mint)}.b-wait{background:var(--ambsoft);color:var(--amb)}.b-tag{background:var(--indsoft);color:var(--ink)}
+.ring{position:relative;width:150px;height:150px;margin:0 auto 14px}
+.ring svg{transform:rotate(-90deg)}
+.ring div{position:absolute;inset:0;display:grid;place-content:center;text-align:center;font:700 2.1rem 'Source Serif 4',serif}
+.ring small{font:500 .8rem 'Source Sans 3';color:var(--mute)}
+.note{border-left:4px solid var(--ind);background:var(--soft);border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:12px;animation:pop .3s}
+.note.Praise{border-color:var(--mint)}.note.Concern{border-color:var(--rose)}.note.Advice{border-color:var(--amb)}
+.note small{color:var(--mute)}
+@keyframes pop{from{opacity:0;transform:translateY(4px)}}
+.row{display:flex;gap:12px;align-items:center;padding:12px;border-radius:8px;border:1.5px solid transparent;width:100%;background:none;text-align:left}
+.row:hover{background:var(--soft)}.row.on{border-color:var(--ind);background:var(--indsoft)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:18px}
+.stat{border-radius:10px;padding:18px 20px;border:1.5px solid var(--line);background:var(--soft)}
+.stat b{font:700 2.2rem 'Source Serif 4',serif;display:block;line-height:1.1}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;color:var(--mute);font-weight:600;font-size:.88rem;padding:8px}
+td{padding:12px 8px;border-top:1.5px solid var(--line)}
+.tbl{overflow-x:auto}
+.sw{width:44px;height:24px;border-radius:99px;border:0;background:var(--line);position:relative;transition:.2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--mint)}.sw.on::after{left:23px}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,120px);background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:8px;font-weight:600;transition:transform .3s;z-index:9}
+#toast.show{transform:translate(-50%,0)}
+.empty{color:var(--mute);padding:20px;text-align:center}
+@media(max-width:860px){#login{grid-template-columns:1fr}.brand{padding:28px 24px;gap:20px}.brand ul{display:none}}
+@media(max-width:760px){#app{grid-template-columns:1fr}aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center}.logo{border:0;margin:0 auto 0 0;padding:0}.me{display:none}.sub{grid-template-columns:86px 1fr 34px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:0}.item small{color:var(--mute);display:block}
+.inl{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.inl input,.inl select{flex:1;min-width:110px;width:auto}
+input[type=date],input[type=number]{background:var(--soft);color:var(--ink);border:1.5px solid var(--line);border-radius:8px;padding:9px 10px}
+.btn.sm{padding:7px 12px;font-size:.88rem}.ck{width:18px;height:18px;accent-color:var(--ind);margin-right:10px;flex:none}
+.b-late{background:var(--rosesoft);color:var(--rose)}.st{margin:24px 0 4px;font-size:1.05rem;padding-top:14px;border-top:1.5px solid var(--line)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--rose);display:inline-block;margin-left:6px}
+.mp{display:flex;gap:14px;align-items:center}.mp .av{width:54px;height:54px;font-size:1.1rem}.lead{display:flex;align-items:center;flex:1;gap:0}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+<section id="login">
+  <div class="brand">
+    <div><h1>Mentor–Mentee Portal</h1><p>One place for students to share their progress and for mentors and the department to respond to it.</p></div>
+    <ul><li><b>Mentees</b>Keep your marks and interests up to date.</li><li><b>Mentors</b>Review mentees and leave notes.</li><li><b>HOD</b>Endorse profiles and assign mentors.</li></ul>
+  </div>
+  <div class="formside"><div class="lbox">
+    <h2>Sign in</h2><p>Choose your role, then enter your college email.</p>
+    <div class="tabs" role="tablist" id="tabs"><button class="tab on" data-r="mentee" role="tab">Mentee</button><button class="tab" data-r="mentor" role="tab">Mentor</button><button class="tab" data-r="admin" role="tab">Admin / HOD</button></div>
+    <div id="lf">
+      <label for="em">Email</label><input type="text" id="em" autocomplete="username" placeholder="name@college.edu">
+      <label for="pw">Password</label><input type="password" id="pw" autocomplete="current-password">
+      <div id="err" role="alert"></div>
+      <button class="btn full" id="go">Sign in</button>
+    </div>
+    <div class="demo">Your HOD creates your account. Ask them if you cannot sign in.</div>
+  </div></div>
+</section>
+
+<div id="app" class="hide">
+  <aside>
+    <div class="logo">Mentor–Mentee Portal</div>
+    <div id="nav" style="display:contents"></div>
+    <div class="me"><div class="av" id="av"></div><div><b id="mn"></b><small id="mr"></small></div></div>
+    <button class="out" id="out">Sign out</button>
+  </aside>
+  <main id="main"></main>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const HOBBIES=['Cricket','Coding','Music','Drawing','Reading','Chess','Dance','Photography'];
+const SUBJ=['Maths','Physics','Programming','English'];
+/* ===== CONFIG: paste your values from Supabase > Project Settings > API ===== */
+const SUPABASE_URL='YOUR_PROJECT_URL',SUPABASE_ANON_KEY='YOUR_ANON_PUBLIC_KEY';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+let S={depts:[],mentors:[],mentees:[],notes:[],users:[]},SNAP={},DS=new Set();
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
+const avg=m=>m.length?Math.round(m.reduce((a,b)=>a+b,0)/m.length):0;
+const mname=id=>(S.mentors.find(m=>m.id==id)||{name:'Unassigned'}).name;
+const ini=n=>n.replace(/^(Dr\.|Prof\.)\s*/,'').split(' ').map(w=>w[0]).join('').slice(0,2);
+const pname=u=>u.role=='mentee'?(S.mentees.find(x=>x.id==u.id)||u).name:u.role=='mentor'?mname(u.id):(u.name||'Admin');
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),Math.max(2200,t.length*90))}
+const T0=new Date().toISOString().slice(0,10),fd=d=>new Date(d+'T00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short'}),nid=()=>Date.now()*1000+Math.floor(Math.random()*1000);
+function ensure(){S.mentees.forEach(m=>{m.sems=Array.isArray(m.sems)&&m.sems.length==8?m.sems:Array(8).fill(null);['skills','goals','tasks','meetings','notif'].forEach(k=>{if(!Array.isArray(m[k]))m[k]=[]});m.hobbies=m.hobbies||[];sync(m)})}
+function sync(m){let c=0;m.sems.forEach((x,i)=>{if(x&&x.length)c=i+1});m.cur=c;const x=c?m.sems[c-1]:[];m.marks=x.map(r=>r.m);m.subj=x.map(r=>r.n)}
+const sa=x=>x&&x.length?avg(x.map(r=>r.m)):null,ovr=m=>avg(m.sems.filter(x=>x&&x.length).map(sa));
+const ntf=(m,t)=>m.notif.unshift({id:nid(),t,at:'Just now'});
+const late=t=>!t.done&&t.due<T0;
+const why=m=>{const r=[];if(avg(m.marks)&&avg(m.marks)<65)r.push('Low marks');const l=m.tasks.filter(late).length;if(l)r.push(l+' overdue task'+(l>1?'s':''));if(m.meetings.some(x=>x.st=='missed'))r.push('Missed meeting');return r};
+const tstat=t=>t.done?'<span class="badge b-ok">Done</span>':late(t)?'<span class="badge b-late">Overdue</span>':'<span class="badge b-wait">Open</span>';
+/* ===== data layer ===== */
+const mk=m=>JSON.stringify([m.mentor,m.hobbies,m.endorsed,m.sems,m.skills,m.goals,m.tasks,m.meetings,m.notif]),pk=m=>JSON.stringify([m.name,m.dept]);
+async function loadAll(){
+ const [p,m,n,d]=await Promise.all([sb.from('profiles').select('*'),sb.from('mentees').select('*'),sb.from('notes').select('*').order('created_at'),sb.from('departments').select('name').order('name')]);
+ const err=p.error||m.error||n.error||d.error;if(err)throw err;
+ const pm=Object.fromEntries(p.data.map(x=>[x.id,x]));
+ S={depts:d.data.map(x=>x.name),
+  users:p.data.map(x=>({id:x.id,role:x.role,email:x.email,name:x.name,off:x.disabled})),
+  mentors:p.data.filter(x=>x.role=='mentor').map(x=>({id:x.id,name:x.name,dept:x.dept,title:x.title||'Faculty',email:x.email,hours:x.hours||'By appointment'})),
+  mentees:m.data.filter(x=>pm[x.id]).map(x=>({id:x.id,name:pm[x.id].name,dept:pm[x.id].dept,mentor:x.mentor_id,hobbies:x.hobbies,endorsed:x.endorsed,sems:x.sems,skills:x.skills,goals:x.goals,tasks:x.tasks,meetings:x.meetings,notif:x.notif})),
+  notes:n.data.map(x=>({id:x.id,mentee:x.mentee_id,mentor:x.mentor_id,tag:x.tag,text:x.text,at:new Date(x.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}))};
+ ensure();SNAP={};DS=new Set(S.depts);
+ S.mentees.forEach(x=>{SNAP['m'+x.id]=mk(x);SNAP['p'+x.id]=pk(x)});S.mentors.forEach(x=>SNAP['p'+x.id]=pk(x))}
+const upd=async q=>{const r=await q.select('id');if(r.error)throw r.error;if(!r.data.length)throw new Error('You do not have permission for that change.')};
+async function push(){
+ for(const m of S.mentees){
+  if(SNAP['m'+m.id]!==mk(m)){await upd(sb.from('mentees').update({mentor_id:m.mentor,hobbies:m.hobbies,endorsed:m.endorsed,sems:m.sems,skills:m.skills,goals:m.goals,tasks:m.tasks,meetings:m.meetings,notif:m.notif}).eq('id',m.id));SNAP['m'+m.id]=mk(m)}
+  if(SNAP['p'+m.id]!==pk(m)&&(role=='admin'||m.id==uid)){await upd(sb.from('profiles').update({name:m.name,dept:m.dept}).eq('id',m.id));SNAP['p'+m.id]=pk(m)}}
+ if(role=='admin')for(const m of S.mentors)if(SNAP['p'+m.id]!==pk(m)){await upd(sb.from('profiles').update({name:m.name,dept:m.dept}).eq('id',m.id));SNAP['p'+m.id]=pk(m)}
+ for(const n of S.notes.filter(x=>x.local)){const r=await sb.from('notes').insert({mentee_id:n.mentee,mentor_id:n.mentor,tag:n.tag,text:n.text}).select().single();if(r.error)throw r.error;n.id=r.data.id;n.local=false}
+ const cur=new Set(S.depts);
+ for(const d of cur)if(!DS.has(d)){const r=await sb.from('departments').insert({name:d});if(r.error)throw r.error}
+ for(const d of DS)if(!cur.has(d)){const r=await sb.from('departments').delete().eq('name',d);if(r.error)throw r.error}
+ DS=cur}
+let queue=Promise.resolve();
+const save=()=>{queue=queue.then(push).catch(async e=>{toast('Not saved: '+(e.message||e));try{await loadAll();render()}catch(x){}})};
+async function callAdmin(b){const r=await sb.functions.invoke('admin-users',{body:b});if(r.error){let m=r.error.message;try{m=(await r.error.context.json()).error||m}catch(e){}throw new Error(m)}return r.data}
+const reload=async t=>{await loadAll();toast(t);render()};
+async function boot(id,fromLogin){
+ const r=await sb.from('profiles').select('*').eq('id',id).maybeSingle(),pr=r.data;
+ if(!pr)throw new Error('No profile exists for this account. Ask the HOD.');
+ if(pr.disabled)throw new Error('This account is disabled. Contact the HOD.');
+ if(fromLogin&&pr.role!=lr)throw new Error('This is a '+pr.role+' account. Choose that tab.');
+ await loadAll();enter({id:pr.id,role:pr.role,email:pr.email,name:pr.name})}
+/* login */
+let lr='mentee';
+$$('.tab').forEach(t=>t.onclick=()=>{lr=t.dataset.r;$$('.tab').forEach(x=>x.classList.toggle('on',x==t));$('#em').value='';$('#pw').value='';$('#err').textContent=''});
+async function tryLogin(){const e=$('#em').value.trim().toLowerCase(),p=$('#pw').value;
+ if(!e||!p){$('#err').textContent='Enter your email and password.';return}
+ $('#go').disabled=true;$('#err').textContent='';
+ try{const r=await sb.auth.signInWithPassword({email:e,password:p});if(r.error)throw new Error('Email or password is incorrect.');await boot(r.data.user.id,true)}
+ catch(x){$('#err').textContent=x.message;await sb.auth.signOut()}
+ $('#go').disabled=false}
+$('#go').onclick=tryLogin;
+$$('#em,#pw').forEach(i=>i.onkeydown=e=>{if(e.key=='Enter')tryLogin()});
+$('#out').onclick=()=>{sb.auth.signOut();$('#app').classList.add('hide');$('#login').classList.remove('hide');$('#pw').value='';toast('Signed out')};
+/* app */
+const NAV={mentee:['Dashboard','My profile'],mentor:['My mentees'],admin:['Overview','People','Assignments','Departments','Accounts','Activity','Reports']};
+let role,tab,uid,sel,psem=0;
+function enter(u){role=u.role;uid=u.id;tab=NAV[role][0];sel=null;psem=0;
+ const n=pname(u);$('#mn').textContent=n;$('#mr').textContent={mentee:'Mentee',mentor:'Mentor',admin:'Admin'}[role];$('#av').textContent=role=='admin'?'H':ini(n);
+ $('#login').classList.add('hide');$('#app').classList.remove('hide');$('#err').textContent='';nav();render();toast('Signed in as '+n)}
+function nav(){$('#nav').innerHTML=NAV[role].map(t=>`<button class="nav ${t==tab?'on':''}" data-t="${t}">${t}</button>`).join('');
+ $$('.nav').forEach(b=>b.onclick=()=>{tab=b.dataset.t;nav();render()})}
+function render(){$('#main').innerHTML=({mentee:mentee,mentor:mentor,admin:admin})[role]();bind();scrollTo(0,0)}
+function ringSvg(p){const r=62,c=2*Math.PI*r;return `<div class="ring"><svg width="150" height="150"><circle cx="75" cy="75" r="${r}" fill="none" stroke="var(--line)" stroke-width="12"/><circle cx="75" cy="75" r="${r}" fill="none" stroke="var(--ind)" stroke-width="12" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-p/100)}" style="transition:stroke-dashoffset .8s"/></svg><div>${p}%<small>average</small></div></div>`}
+function bars(m){return m.marks.length?m.marks.map((v,i)=>`<div class="sub"><span>${m.subj[i]}</span><div class="track"><div style="width:${v}%;height:100%;background:${v<60?'var(--rose)':'var(--ind)'}"></div></div><b>${v}</b></div>`).join(''):'<p class="empty">No marks entered yet.</p>'}
+function semChart(m){return `<div style="display:flex;gap:6px;align-items:flex-end;height:112px;margin:10px 0 4px">${m.sems.map((x,i)=>{const a=sa(x);return `<div style="flex:1;text-align:center;font-size:.75rem;color:var(--mute)" title="Semester ${i+1}">${a===null?'':a}<div style="height:${a===null?3:Math.max(a*.8,6)}px;background:${a===null?'var(--line)':a<60?'var(--rose)':'var(--ind)'};border-radius:3px 3px 0 0;margin-top:2px"></div>S${i+1}</div>`}).join('')}</div>`}
+function semEd(m){const rows=m.sems[psem-1]||[];return `<label>Semester</label><div class="chips">${m.sems.map((x,i)=>`<button class="chip ${psem==i+1?'on':''}" data-ps="${i+1}">Sem ${i+1}${x&&x.length?' •':''}</button>`).join('')}</div><label>Subjects and marks for semester ${psem}</label>${rows.map((r,i)=>`<div class="inl" style="margin:8px 0"><input type="text" value="${r.n}" data-sn="${i}" aria-label="Subject name"><input type="number" min="0" max="100" value="${r.m}" data-sk="${i}" aria-label="Marks out of 100" style="max-width:90px;flex:none"><button class="btn sec sm" data-sx="${i}">Remove</button></div>`).join('')||'<p class="empty">No subjects yet for this semester.</p>'}<button class="btn sec sm" id="sa" style="margin-top:6px">Add subject</button>`}
+function notesHtml(id){const n=S.notes.filter(x=>x.mentee==id).reverse();return n.length?n.map(x=>`<div class="note ${x.tag}"><b>${x.tag}</b> <small>from ${mname(x.mentor)}, ${x.at}</small><p>${x.text}</p></div>`).join(''):'<p class="empty">No notes yet. Your mentor\'s feedback will appear here.</p>'}
+function mentee(){const m=S.mentees.find(x=>x.id==uid),mt=S.mentors.find(x=>x.id==m.mentor);
+ if(tab=='My profile'){if(!psem)psem=m.cur||1}
+ if(tab=='My profile')return `<header><h2>My profile</h2><p>Enter marks for each semester. Your mentor sees whatever you save.</p></header><div class="card" style="max-width:660px"><h3>Your details</h3>
+ <label for="nm">Full name</label><input type="text" id="nm" value="${m.name}">
+ ${semEd(m)}
+ <label>Hobbies</label><div class="chips">${HOBBIES.map(h=>`<button class="chip ${m.hobbies.includes(h)?'on':''}" data-h="${h}">${h}</button>`).join('')}</div>
+ <p style="margin-top:22px"><button class="btn" id="sv">Save profile</button></p></div>`;
+ const A=m.meetings.filter(x=>x.st=='attended').length,X=m.meetings.filter(x=>x.st=='missed').length,pct=A+X?Math.round(A/(A+X)*100):100;
+ const up=m.meetings.filter(x=>x.st=='upcoming'),past=m.meetings.filter(x=>x.st!='upcoming'),dn=m.tasks.filter(t=>t.done).length;
+ return `<header><h2>Welcome, ${m.name.split(' ')[0]}</h2><p>${up.length?'Your next meeting is on '+fd(up[0].date)+'.':'No meeting is scheduled yet.'}</p></header><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
+ <div class="card"><h3>Your assigned mentor</h3>${mt?`<div class="mp"><div class="av">${ini(mt.name)}</div><div><b>${mt.name}</b><br><small style="color:var(--mute)">${mt.title}</small></div></div><p style="margin-top:12px">${mt.email}<br><small style="color:var(--mute)">Office hours: ${mt.hours}</small></p>`:'<p class="empty">No mentor assigned yet. The HOD will assign one soon.</p>'}</div>
+ <div class="card"><h3>Notifications</h3>${m.notif.length?m.notif.map(n=>`<div class="item"><span>${n.t}<small>${n.at}</small></span></div>`).join('')+'<p style="margin-top:12px"><button class="btn sec sm" id="nclr">Clear all</button></p>':'<p class="empty">You are all caught up.</p>'}</div>
+ <div class="card"><h3>Upcoming meetings</h3>${up.length?up.map(x=>`<div class="item"><b>${x.topic}</b><span class="badge b-wait">${fd(x.date)}</span></div>`).join(''):'<p class="empty">Nothing scheduled. Your mentor will set the next meeting.</p>'}</div>
+ <div class="card"><h3>Meeting history</h3><p style="color:var(--mute)">Attendance ${pct}% (${A} attended, ${X} missed)</p><div class="track" style="margin:8px 0 6px"><div style="width:${pct}%;height:100%;background:var(--mint)"></div></div>${past.map(x=>`<div class="item"><span>${x.topic}<small>${fd(x.date)}</small></span><span class="badge ${x.st=='attended'?'b-ok':'b-late'}">${x.st=='attended'?'Attended':'Missed'}</span></div>`).join('')||'<p class="empty">No past meetings yet.</p>'}</div>
+ <div class="card"><h3>Tasks from your mentor</h3><p style="color:var(--mute)">${dn} of ${m.tasks.length} completed</p><div class="track" style="margin:8px 0 6px"><div style="width:${m.tasks.length?dn/m.tasks.length*100:0}%;height:100%;background:var(--mint)"></div></div>${m.tasks.map(t=>`<div class="item"><label class="lead" style="margin:0;font-weight:500"><input type="checkbox" class="ck" data-tk="${t.id}" ${t.done?'checked':''}><span>${t.title}<small>Due ${fd(t.due)}</small></span></label>${tstat(t)}</div>`).join('')||'<p class="empty">No tasks assigned.</p>'}</div>
+ <div class="card" style="text-align:center"><h3>Academic progress</h3>${ringSvg(avg(m.marks))}<p style="color:var(--mute)">${m.cur?'Semester '+m.cur+' average':'No marks yet. Add them under My profile.'}</p><div style="text-align:left">${bars(m)}${m.cur?`<p style="margin-top:14px"><b>Semester-wise average</b></p>${semChart(m)}<p style="color:var(--mute);font-size:.9rem">Overall ${ovr(m)}% across ${m.sems.filter(x=>x&&x.length).length} semester(s)</p>`:''}</div><p style="margin-top:8px">${m.endorsed?'<span class="badge b-ok">Endorsed by HOD</span>':'<span class="badge b-wait">Waiting for endorsement</span>'}</p></div>
+ <div class="card"><h3>Skills I am developing</h3>${m.skills.map(k=>`<div class="sub"><span>${k.n}</span><div class="track"><div style="width:${k.l*20}%;height:100%;background:var(--ind)"></div></div><b>${k.l}/5</b></div>`).join('')}<div class="inl"><input type="text" id="skn" placeholder="Add a skill" aria-label="New skill"><button class="btn sm" id="skb">Add skill</button></div></div>
+ <div class="card"><h3>My goals</h3>${m.goals.map(g=>`<div class="item"><label class="lead" style="margin:0;font-weight:500"><input type="checkbox" class="ck" data-gl="${g.id}" ${g.done?'checked':''}><span>${g.t}</span></label></div>`).join('')}<div class="inl"><input type="text" id="gln" placeholder="Add a goal" aria-label="New goal"><button class="btn sm" id="glb">Add goal</button></div></div>
+ <div class="card"><h3>Mentor feedback</h3>${notesHtml(m.id)}</div></div>`}
+function mentor(){const mine=S.mentees.filter(x=>x.mentor==uid),free=S.mentees.filter(x=>!x.mentor),need=mine.filter(x=>why(x).length);
+ if(!mine.find(x=>x.id==sel))sel=mine.length?mine[0].id:null;const m=sel&&S.mentees.find(x=>x.id==sel);
+ const open=mine.reduce((a,x)=>a+x.tasks.filter(t=>!t.done).length,0),ups=mine.reduce((a,x)=>a+x.meetings.filter(y=>y.st=='upcoming').length,0);
+ return `<header><h2>Your mentees</h2><p>Signed in as ${mname(uid)}.</p></header>
+ <div class="stats"><div class="stat"><b>${mine.length}</b>Mentees</div><div class="stat"><b>${open}</b>Open tasks</div><div class="stat"><b>${ups}</b>Upcoming meetings</div><div class="stat"><b style="color:var(--rose)">${need.length}</b>Need attention</div></div>
+ ${need.length?`<div class="card" style="margin-bottom:18px"><h3>Students needing attention</h3>${need.map(x=>`<button class="row" data-s="${x.id}"><div class="av">${ini(x.name)}</div><div><b>${x.name}</b><br>${why(x).map(r=>`<span class="badge b-late" style="margin-right:6px">${r}</span>`).join('')}</div></button>`).join('')}</div>`:''}
+ <div class="grid" style="grid-template-columns:minmax(250px,1fr) 2.2fr"><div class="card"><h3>All mentees</h3>${mine.map(x=>`<button class="row ${x.id==sel?'on':''}" data-s="${x.id}"><div class="av">${ini(x.name)}</div><div><b>${x.name}${why(x).length?'<span class="dot" title="Needs attention"></span>':''}</b><br><small style="color:var(--mute)">Average ${avg(x.marks)}%</small></div></button>`).join('')||'<p class="empty">No mentees yet. Add one below.</p>'}
+ <div class="inl"><select id="fr" aria-label="Mentee to add">${free.length?free.map(x=>`<option value="${x.id}">${x.name}</option>`).join(''):'<option value="">No unassigned students</option>'}</select><button class="btn sm" id="ad" ${free.length?'':'disabled'}>Add mentee</button></div></div>
+ ${m?`<div class="card"><div class="item" style="border:0;padding-top:0"><h3 style="margin:0">${m.name}</h3><button class="btn sec sm" id="rm">Remove mentee</button></div><div class="chips">${m.hobbies.map(h=>`<span class="badge b-tag">${h}</span>`).join('')}</div>
+ <h3 class="st">Academic performance${m.cur?' (semester '+m.cur+')':''}</h3>${bars(m)}${m.cur?semChart(m):''}<div class="inl">${m.cur?m.marks.map((v,i)=>`<input type="number" min="0" max="100" value="${v}" data-mk="${i}" aria-label="${m.subj[i]} marks">`).join('')+'<button class="btn sm" id="mk">Update marks</button>':''}</div>
+ <h3 class="st">Tasks and completion</h3>${m.tasks.map(t=>`<div class="item"><label class="lead" style="margin:0;font-weight:500"><input type="checkbox" class="ck" data-mt="${t.id}" ${t.done?'checked':''}><span>${t.title}<small>Due ${fd(t.due)}</small></span></label>${tstat(t)}</div>`).join('')||'<p class="empty">No tasks given yet.</p>'}
+ <div class="inl"><input type="text" id="tt" placeholder="New task" aria-label="Task title"><input type="date" id="td" value="${T0}" aria-label="Due date"><button class="btn sm" id="ta">Give task</button></div>
+ <h3 class="st">Meetings and sessions</h3>${m.meetings.map(x=>`<div class="item"><span>${x.topic}<small>${fd(x.date)}</small></span>${x.st=='upcoming'?`<span><button class="btn sm" data-ms="${x.id}|attended">Mark attended</button> <button class="btn sec sm" data-ms="${x.id}|missed">Missed</button></span>`:`<span class="badge ${x.st=='attended'?'b-ok':'b-late'}">${x.st=='attended'?'Attended':'Missed'}</span>`}</div>`).join('')}
+ <div class="inl"><input type="text" id="mtp" placeholder="Meeting topic" aria-label="Meeting topic"><input type="date" id="mdt" value="${T0}" aria-label="Meeting date"><button class="btn sm" id="ms">Schedule meeting</button></div>
+ <h3 class="st">Feedback</h3><div class="chips" id="tg" style="margin-bottom:8px">${['Praise','Advice','Concern'].map((t,i)=>`<button class="chip ${i==1?'on':''}" data-t="${t}">${t}</button>`).join('')}</div>
+ <textarea id="nt" placeholder="What should ${m.name.split(' ')[0]} do next?"></textarea><p style="margin:12px 0 20px"><button class="btn" id="an">Send feedback</button></p>${notesHtml(m.id)}</div>`:''}</div>`}
+const pc=(a,b)=>b?Math.round(a/b*100):0,clean=v=>(v||'').replace(/[<>&"`]/g,'').trim();
+function agg(L){const r={n:L.length,sum:0,td:0,tt:0,a:0,x:0,up:0,fb:0};L.forEach(m=>{r.sum+=avg(m.marks);r.td+=m.tasks.filter(t=>t.done).length;r.tt+=m.tasks.length;r.a+=m.meetings.filter(y=>y.st=='attended').length;r.x+=m.meetings.filter(y=>y.st=='missed').length;r.up+=m.meetings.filter(y=>y.st=='upcoming').length;r.fb+=S.notes.filter(q=>q.mentee==m.id).length});r.avg=r.n?Math.round(r.sum/r.n):0;r.tp=pc(r.td,r.tt);r.ap=r.a+r.x?pc(r.a,r.a+r.x):0;return r}
+const dsel=(c,at)=>`<select ${at}>${S.depts.map(d=>`<option ${d==c?'selected':''}>${d}</option>`).join('')}</select>`;
+const hd=(h,p)=>`<header><h2>${h}</h2><p>${p}</p></header>`;
+const tb=(h,rows)=>`<div class="card tbl"><table><tr>${h.map(x=>`<th>${x}`).join('')}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}`).join('')}</tr>`).join('')}</table></div>`;
+const AD={
+Overview(){const e=S.mentees.filter(x=>x.endorsed).length,all=S.mentees.length;
+ return hd('Department overview','Review profiles and endorse them.')+`<div class="stats"><div class="stat"><b>${all}</b>Students</div><div class="stat"><b>${S.mentors.length}</b>Mentors</div><div class="stat"><b>${S.depts.length}</b>Departments</div><div class="stat"><b>${all-e}</b>Pending endorsement</div><div class="stat"><b style="color:var(--rose)">${S.mentees.filter(x=>why(x).length).length}</b>Need support</div></div>`+
+ tb(['Student','Department','Average','Mentor','Endorse'],S.mentees.map(x=>[`<b>${x.name}</b><br><small style="color:var(--mute)">${x.hobbies.join(', ')||'No hobbies listed'}</small>`,x.dept,avg(x.marks)+'%',mname(x.mentor),`<button class="sw ${x.endorsed?'on':''}" data-e="${x.id}" role="switch" aria-checked="${x.endorsed}" aria-label="Endorse ${x.name}"></button>`]))},
+People(){const f=(id,l,t='text',v='')=>`<label for="${id}">${l}</label><input type="${t}" id="${id}" value="${v}" autocomplete="off">`;
+ return hd('People','Add mentors and students. Each one gets a sign-in account.')+`<div class="grid">
+ <div class="card"><h3>Add a mentor</h3>${f('am-n','Full name')}${f('am-e','College email')}<label>Department</label>${dsel('','id="am-d"')}${f('am-p','Starting password','text','welcome123')}<p style="margin-top:18px"><button class="btn" id="am-b">Add mentor</button></p></div>
+ <div class="card"><h3>Add a student</h3>${f('as-n','Full name')}${f('as-e','College email')}<label>Department</label>${dsel('','id="as-d"')}<label>Mentor</label><select id="as-m"><option value="">Assign later</option>${S.mentors.map(m=>`<option value="${m.id}">${m.name}</option>`).join('')}</select>${f('as-p','Starting password','text','welcome123')}<p style="margin-top:18px"><button class="btn" id="as-b">Add student</button></p></div></div>
+ <h3 class="st">Mentors</h3>`+tb(['Name','Email','Department','Mentees'],S.mentors.map(m=>[`<b>${m.name}</b>`,m.email,dsel(m.dept,`data-dp="m|${m.id}" aria-label="Department of ${m.name}"`),S.mentees.filter(x=>x.mentor==m.id).length]))+`<h3 class="st">Students</h3>`+tb(['Name','Department','Mentor'],S.mentees.map(x=>[`<b>${x.name}</b>`,dsel(x.dept,`data-dp="s|${x.id}" aria-label="Department of ${x.name}"`),mname(x.mentor)]))},
+Assignments(){return hd('Assign mentors','Changes apply immediately and the student is notified.')+`<div class="stats">${S.mentors.map(m=>`<div class="stat"><b>${S.mentees.filter(x=>x.mentor==m.id).length}</b>${m.name}</div>`).join('')}<div class="stat"><b style="color:var(--amb)">${S.mentees.filter(x=>!x.mentor).length}</b>Unassigned</div></div>`+
+ tb(['Student','Department','Mentor'],S.mentees.map(x=>[`<b>${x.name}</b>`,x.dept,`<select data-a="${x.id}" aria-label="Mentor for ${x.name}"><option value="" ${x.mentor?'':'selected'}>Unassigned</option>${S.mentors.map(m=>`<option value="${m.id}" ${m.id==x.mentor?'selected':''}>${m.name}</option>`).join('')}</select>`]))},
+Departments(){return hd('Departments','A department can be removed only when it has no people.')+`<div class="card" style="margin-bottom:18px;max-width:520px"><h3>Create a department</h3><div class="inl" style="margin:0"><input type="text" id="dpn" placeholder="e.g. Electronics" aria-label="Department name"><button class="btn" id="dp-b">Create</button></div></div>`+
+ tb(['Department','Mentors','Students','Action'],S.depts.map(d=>{const n=S.mentors.filter(m=>m.dept==d).length,k=S.mentees.filter(m=>m.dept==d).length;return[`<b>${d}</b>`,n,k,`<button class="btn sec sm" data-dd="${d}" ${n+k?'disabled title="Move people out first"':''}>Remove</button>`]}))},
+Accounts(){return hd('Accounts','Disable access or issue a new password.')+tb(['Name','Role','Email','Status','Actions'],S.users.map(u=>[`<b>${pname(u)}</b>`,u.role,u.email,u.off?'<span class="badge b-late">Disabled</span>':'<span class="badge b-ok">Active</span>',u.role=='admin'?'<small style="color:var(--mute)">Your account</small>':`<button class="btn sec sm" data-ac="${u.id}">${u.off?'Enable':'Disable'}</button> <button class="btn sec sm" data-rs="${u.id}">Reset password</button>`]))},
+Activity(){const feed=S.notes.slice(-6).reverse();
+ return hd('Mentoring activity','How each mentor is engaging with their students.')+tb(['Mentor','Mentees','Meetings held','Missed','Upcoming','Open tasks','Feedback','Status'],S.mentors.map(m=>{const L=S.mentees.filter(x=>x.mentor==m.id),g=agg(L),open=g.tt-g.td,fb=S.notes.filter(q=>q.mentor==m.id).length;return[`<b>${m.name}</b>`,g.n,g.a,g.x,g.up,open,fb,!g.n?'<span class="badge b-wait">No mentees</span>':(g.a+fb)?'<span class="badge b-ok">Active</span>':'<span class="badge b-late">No activity</span>']}))+
+ `<h3 class="st">Recent feedback</h3><div class="card">${feed.map(q=>`<div class="note ${q.tag}"><b>${mname(q.mentor)}</b> to <b>${(S.mentees.find(x=>x.id==q.mentee)||{name:'a student'}).name}</b> <small>${q.tag}, ${q.at}</small><p>${q.text}</p></div>`).join('')||'<p class="empty">No feedback sent yet.</p>'}</div>`},
+Reports(){const g=agg(S.mentees),btn=(k,l)=>`<button class="btn sec sm" data-dl="${k}">${l}</button>`;
+ return hd('Reports','View the summary here or download it as a CSV file.')+`<div class="stats"><div class="stat"><b>${g.avg}%</b>Average marks</div><div class="stat"><b>${g.tp}%</b>Task completion</div><div class="stat"><b>${g.ap}%</b>Meeting attendance</div><div class="stat"><b>${g.fb}</b>Feedback notes</div></div>
+ <h3 class="st" style="border:0;margin-top:0">By department</h3>`+tb(['Department','Students','Mentors','Avg marks','Tasks done','Attendance'],S.depts.map(d=>{const a=agg(S.mentees.filter(x=>x.dept==d));return[`<b>${d}</b>`,a.n,S.mentors.filter(m=>m.dept==d).length,a.avg+'%',a.tp+'%',a.ap+'%']}))+
+ `<h3 class="st">By mentor</h3>`+tb(['Mentor','Students','Avg marks','Tasks done','Attendance'],S.mentors.map(m=>{const a=agg(S.mentees.filter(x=>x.mentor==m.id));return[`<b>${m.name}</b>`,a.n,a.avg+'%',a.tp+'%',a.ap+'%']}))+
+ `<h3 class="st">Students needing attention</h3><div class="card">${S.mentees.filter(x=>why(x).length).map(x=>`<div class="item"><span><b>${x.name}</b><small>${mname(x.mentor)}</small></span><span>${why(x).map(r=>`<span class="badge b-late" style="margin-left:6px">${r}</span>`).join('')}</span></div>`).join('')||'<p class="empty">Nobody needs attention right now.</p>'}</div>
+ <h3 class="st">Generate a report</h3><div class="card"><p style="color:var(--mute);margin-bottom:12px">Files open in Excel or Google Sheets.</p><div class="chips">${btn('stu','Student report')}${btn('men','Mentor report')}${btn('dep','Department summary')}</div></div>`}};
+function admin(){return AD[tab]()}
+function csvOf(k){const q=v=>'"'+String(v).replace(/"/g,'""')+'"';let h,r;
+ if(k=='stu'){h=['Student','Department','Mentor','Average marks','Tasks done','Tasks total','Meetings attended','Meetings missed','Attendance %','Feedback notes','Endorsed'];r=S.mentees.map(x=>{const a=agg([x]);return[x.name,x.dept,mname(x.mentor),a.avg,a.td,a.tt,a.a,a.x,a.ap,a.fb,x.endorsed?'Yes':'No']})}
+ else if(k=='men'){h=['Mentor','Department','Mentees','Meetings held','Missed','Upcoming','Tasks open','Tasks done','Feedback given'];r=S.mentors.map(m=>{const a=agg(S.mentees.filter(x=>x.mentor==m.id));return[m.name,m.dept,a.n,a.a,a.x,a.up,a.tt-a.td,a.td,S.notes.filter(q=>q.mentor==m.id).length]})}
+ else{h=['Department','Students','Mentors','Average marks','Task completion %','Attendance %'];r=S.depts.map(d=>{const a=agg(S.mentees.filter(x=>x.dept==d));return[d,a.n,S.mentors.filter(m=>m.dept==d).length,a.avg,a.tp,a.ap]})}
+ return [h,...r].map(l=>l.map(q).join(',')).join('\n')}
+function bind(){const m=role=='mentee'?S.mentees.find(x=>x.id==uid):null,sm=sel?S.mentees.find(x=>x.id==sel):null;
+ const on=(q,f)=>{const e=$(q);if(e)e.onclick=f},all=(q,f)=>$$(q).forEach(f),fin=t=>{save();toast(t);render()};
+ all('.chip[data-h]',c=>c.onclick=()=>{const h=c.dataset.h,i=m.hobbies.indexOf(h);i<0?m.hobbies.push(h):m.hobbies.splice(i,1);c.classList.toggle('on')});
+ const collect=()=>{const v=clean($('#nm').value);if(v)m.name=v;const rows=m.sems[psem-1]||[];$$('[data-sn]').forEach(e=>{rows[e.dataset.sn].n=clean(e.value)||'Subject '+(+e.dataset.sn+1)});$$('[data-sk]').forEach(e=>{rows[e.dataset.sk].m=Math.max(0,Math.min(100,+e.value||0))})};
+ all('[data-ps]',c=>c.onclick=()=>{collect();psem=+c.dataset.ps;render()});
+ on('#sa',()=>{collect();(m.sems[psem-1]||=[]).push({n:'Subject '+(m.sems[psem-1].length+1),m:0});render()});
+ all('[data-sx]',b=>b.onclick=()=>{collect();m.sems[psem-1].splice(+b.dataset.sx,1);if(!m.sems[psem-1].length)m.sems[psem-1]=null;render()});
+ on('#sv',()=>{if(!$('#nm').value.trim()){toast('Enter your name first');return}collect();sync(m);m.endorsed=false;$('#mn').textContent=m.name;$('#av').textContent=ini(m.name);fin('Profile saved for semester '+psem)});
+ all('[data-tk]',c=>c.onchange=()=>{m.tasks.find(x=>x.id==c.dataset.tk).done=c.checked;fin(c.checked?'Task marked done':'Task reopened')});
+ all('[data-gl]',c=>c.onchange=()=>{m.goals.find(x=>x.id==c.dataset.gl).done=c.checked;fin('Goal updated')});
+ on('#skb',()=>{const v=$('#skn').value.trim();if(!v){toast('Type a skill first');return}m.skills.push({n:v,l:1});fin('Skill added')});
+ on('#glb',()=>{const v=$('#gln').value.trim();if(!v){toast('Type a goal first');return}m.goals.push({id:nid(),t:v,done:false});fin('Goal added')});
+ on('#nclr',()=>{m.notif=[];fin('Notifications cleared')});
+ all('.row',b=>b.onclick=()=>{sel=b.dataset.s;render()});
+ all('#tg .chip',c=>c.onclick=()=>{$$('#tg .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on')});
+ on('#an',()=>{const t=$('#nt').value.trim();if(!t){toast('Write feedback before sending');return}S.notes.push({id:nid(),mentee:sel,mentor:uid,tag:$('#tg .on').dataset.t,text:t,at:'Just now',local:true});ntf(sm,'New feedback from your mentor');fin('Feedback sent')});
+ on('#ad',()=>{const v=$('#fr').value;if(!v)return;const x=S.mentees.find(y=>y.id==v);x.mentor=uid;sel=v;ntf(x,mname(uid)+' is now your mentor');fin('Added '+x.name)});
+ on('#rm',()=>{if(!confirm('Remove '+sm.name+' from your mentees?'))return;sm.mentor=null;sel=null;fin('Mentee removed')});
+ on('#mk',()=>{$$('[data-mk]').forEach(i=>sm.sems[sm.cur-1][i.dataset.mk].m=Math.max(0,Math.min(100,+i.value||0)));sync(sm);ntf(sm,'Your marks were updated');fin('Marks updated')});
+ all('[data-mt]',c=>c.onchange=()=>{sm.tasks.find(x=>x.id==c.dataset.mt).done=c.checked;fin('Task status updated')});
+ on('#ta',()=>{const v=$('#tt').value.trim();if(!v){toast('Enter a task title');return}sm.tasks.push({id:nid(),title:v,due:$('#td').value||T0,done:false});ntf(sm,'New task: '+v);fin('Task given')});
+ on('#ms',()=>{const v=$('#mtp').value.trim();if(!v){toast('Enter a meeting topic');return}const d=$('#mdt').value||T0;sm.meetings.push({id:nid(),date:d,topic:v,st:'upcoming'});sm.meetings.sort((a,b)=>a.date<b.date?-1:1);ntf(sm,'Meeting scheduled: '+v+' on '+fd(d));fin('Meeting scheduled')});
+ all('[data-ms]',b=>b.onclick=()=>{const[i,st]=b.dataset.ms.split('|');sm.meetings.find(x=>x.id==i).st=st;fin('Session marked '+st)});
+ all('[data-e]',b=>b.onclick=()=>{const x=S.mentees.find(y=>y.id==b.dataset.e);x.endorsed=!x.endorsed;save();toast(x.endorsed?'Endorsed '+x.name:'Endorsement removed');render()});
+ all('[data-a]',s=>s.onchange=()=>{const x=S.mentees.find(y=>y.id==s.dataset.a);x.mentor=s.value||null;if(x.mentor)ntf(x,mname(x.mentor)+' is now your mentor');fin('Mentor assigned')});
+ const emailOk=e=>/^\S+@\S+\.\S+$/.test(e)&&!S.users.some(u=>u.email==e.toLowerCase());
+ on('#am-b',async()=>{const n=clean($('#am-n').value),e=clean($('#am-e').value).toLowerCase(),p=$('#am-p').value;if(!n||!emailOk(e)||p.length<6){toast(!n?'Enter a name':p.length<6?'Password needs 6+ characters':'Enter a new, valid email');return}try{await callAdmin({action:'create',role:'mentor',name:n,email:e,password:p,dept:$('#am-d').value});await reload('Mentor added: '+n)}catch(x){toast(x.message)}});
+ on('#as-b',async()=>{const n=clean($('#as-n').value),e=clean($('#as-e').value).toLowerCase(),p=$('#as-p').value;if(!n||!emailOk(e)||p.length<6){toast(!n?'Enter a name':p.length<6?'Password needs 6+ characters':'Enter a new, valid email');return}try{await callAdmin({action:'create',role:'mentee',name:n,email:e,password:p,dept:$('#as-d').value,mentor_id:$('#as-m').value||null});await reload('Student added: '+n)}catch(x){toast(x.message)}});
+ on('#dp-b',()=>{const v=clean($('#dpn').value);if(!v){toast('Enter a department name');return}if(S.depts.some(d=>d.toLowerCase()==v.toLowerCase())){toast('That department already exists');return}S.depts.push(v);fin('Department created')});
+ all('[data-dd]',b=>b.onclick=()=>{S.depts=S.depts.filter(d=>d!=b.dataset.dd);fin('Department removed')});
+ all('[data-dp]',x=>x.onchange=()=>{const[t,i]=x.dataset.dp.split('|');(t=='m'?S.mentors:S.mentees).find(y=>y.id==i).dept=x.value;fin('Department updated')});
+ all('[data-ac]',b=>b.onclick=async()=>{const u=S.users.find(y=>y.id==b.dataset.ac);try{await callAdmin({action:'disable',id:u.id,off:!u.off});await reload(u.off?'Account enabled':'Account disabled')}catch(x){toast(x.message)}});
+ all('[data-rs]',b=>b.onclick=async()=>{const u=S.users.find(y=>y.id==b.dataset.rs),pw=Math.random().toString(36).slice(2,10)+'A7';try{await callAdmin({action:'reset',id:u.id,password:pw});toast('New password for '+u.email+': '+pw)}catch(x){toast(x.message)}});
+ all('[data-dl]',b=>b.onclick=async()=>{try{const d=await claude.use('downloads');if(!d){toast('Downloads are not available here');return}await d.save({filename:{stu:'student-report',men:'mentor-report',dep:'department-summary'}[b.dataset.dl]+'.csv',data:new Blob([csvOf(b.dataset.dl)],{type:'text/csv'})});toast('Report ready')}catch(e){if(!e||e.code!='declined')toast('Could not save the report')}});
+
+}
+sb.auth.getSession().then(r=>{if(r.data.session)boot(r.data.session.user.id,false).catch(()=>sb.auth.signOut())});
+</script>
+</body>
+</html>

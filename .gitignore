@@ -1,0 +1,11 @@
+# secrets and local files
+.env
+.env.*
+*.local
+supabase/.temp/
+supabase/.branches/
+
+# tools and OS
+node_modules/
+.DS_Store
+Thumbs.db
